@@ -91,71 +91,117 @@ class HomePage extends HookWidget {
       );
 
   Widget _menuBar() => Builder(
-        builder: (final context) => Card(
-          child: Padding(
-            padding: const EdgeInsets.all(4),
-            child: Row(
-              children: [
-                TextButton.icon(
-                  onPressed: () {
-                    final directoryPicker = DirectoryPicker()
-                      ..title = 'Pick Directory to Scan:';
+        builder: (final context) {
+          final theme = Theme.of(context);
 
-                    final directory = directoryPicker.getDirectory();
+          return Card(
+            child: Padding(
+              padding: const EdgeInsets.all(4),
+              child: Row(
+                children: [
+                  TextButton.icon(
+                    onPressed: () {
+                      final directoryPicker = DirectoryPicker()
+                        ..title = 'Pick Directory to Scan:';
 
-                    if (directory == null) {
-                      return;
-                    }
+                      final directory = directoryPicker.getDirectory();
 
-                    context
-                        .read<home.Bloc>()
-                        .add(home.ChoseDirectoryToScan(directory));
-                  },
-                  icon: const Icon(FluentIcons.search_16_regular),
-                  label: const Text('Scan'),
-                ),
-                TextButton.icon(
-                  onPressed: () {
-                    final filePicker = OpenFilePicker()
-                      ..title = 'Pick File to Import:'
-                      ..fileMustExist = true
-                      ..filterSpecification = treeFilefilterSpecification;
+                      if (directory == null) {
+                        return;
+                      }
 
-                    final files = filePicker.getFiles();
-
-                    if (files.isEmpty) {
-                      return;
-                    }
-
-                    context.read<home.Bloc>().add(home.ImportTrees(files));
-                  },
-                  icon: const Icon(FluentIcons.arrow_import_16_regular),
-                  label: const Text('Import'),
-                ),
-                const Spacer(),
-                const Text('Theme: '),
-                BlocBuilder<root.Bloc, root.State>(
-                  buildWhen: (final previous, final current) =>
-                      previous.themeFlavorName != current.themeFlavorName,
-                  builder: (final context, final state) =>
-                      DropdownButton<String>(
-                    value: state.themeFlavorName,
-                    items: root.themeFlavorMap.keys
-                        .map(
-                          (final flavor) => DropdownMenuItem(
-                            value: flavor,
-                            child: Text(flavor),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (final value) =>
-                        context.read<root.Bloc>().add(root.ChangeTheme(value)),
+                      context
+                          .read<home.Bloc>()
+                          .add(home.ChoseDirectoryToScan(directory));
+                    },
+                    icon: const Icon(FluentIcons.search_16_regular),
+                    label: const Text('Scan'),
                   ),
-                ),
-              ],
+                  TextButton.icon(
+                    onPressed: () {
+                      final filePicker = OpenFilePicker()
+                        ..title = 'Pick File to Import:'
+                        ..fileMustExist = true
+                        ..filterSpecification = treeFilefilterSpecification;
+
+                      final files = filePicker.getFiles();
+
+                      if (files.isEmpty) {
+                        return;
+                      }
+
+                      context.read<home.Bloc>().add(home.ImportTrees(files));
+                    },
+                    icon: const Icon(FluentIcons.arrow_import_16_regular),
+                    label: const Text('Import'),
+                  ),
+                  const Spacer(),
+                  BlocBuilder<root.Bloc, root.State>(
+                    buildWhen: (final previous, final current) =>
+                        previous.themeFlavorName != current.themeFlavorName,
+                    builder: (final context, final state) => MenuAnchor(
+                      menuChildren: [
+                        Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: Text(
+                            'Theme:',
+                            style: theme.textTheme.titleMedium,
+                          ),
+                        ),
+                        const Divider(height: 0),
+                        ...root.themeFlavorMap.keys.map(
+                          (final flavor) => MenuItemButton(
+                            style: MenuItemButton.styleFrom(
+                              padding: const EdgeInsets.all(4),
+                              minimumSize: Size.zero,
+                            ),
+                            onPressed: () => context
+                                .read<root.Bloc>()
+                                .add(root.ChangeTheme(flavor)),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 4,
+                                    horizontal: 10,
+                                  ),
+                                  child: Text(
+                                    flavor,
+                                    style: theme.textTheme.titleMedium,
+                                  ),
+                                ),
+                                if (flavor == state.themeFlavorName)
+                                  Icon(
+                                    FluentIcons.checkmark_16_regular,
+                                    color: theme.colorScheme.primary,
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                      builder: (
+                        final context,
+                        final controller,
+                        final child,
+                      ) =>
+                          IconButton(
+                        padding: const EdgeInsets.all(4),
+                        onPressed: () => controller.isOpen
+                            ? controller.close()
+                            : controller.open(),
+                        icon: Image.network(
+                          'https://github.com/catppuccin/catppuccin/blob/main/assets/logos/exports/1544x1544_circle.png?raw=true',
+                          height: 35,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       );
 
   Widget _treesPanel(

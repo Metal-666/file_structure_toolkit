@@ -14,6 +14,10 @@ class Bloc extends flutter_bloc.Bloc<Event, State> {
     });
     on<ChangeTheme>(
       (final event, final emit) async {
+        if (event.flavorName == state.themeFlavorName) {
+          return;
+        }
+
         await Settings.themeFlavorName.save(event.flavorName);
 
         emit(state.copyWith(themeFlavorName: () => event.flavorName));
