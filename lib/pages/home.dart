@@ -186,6 +186,7 @@ class HomePage extends HookWidget {
                         final child,
                       ) =>
                           IconButton(
+                        tooltip: 'Change theme',
                         padding: const EdgeInsets.all(4),
                         onPressed: () => controller.isOpen
                             ? controller.close()
@@ -277,6 +278,7 @@ class HomePage extends HookWidget {
               ),
               const Spacer(),
               IconButton(
+                tooltip: 'Export tree to file',
                 onPressed: () {
                   final saveFilePicker = SaveFilePicker()
                     ..title = 'Export scan results:'
@@ -295,6 +297,7 @@ class HomePage extends HookWidget {
                 icon: const Icon(FluentIcons.arrow_export_16_regular),
               ),
               IconButton(
+                tooltip: 'Collapse/Expand',
                 onPressed: () {
                   if (treeController.isTreeExpanded) {
                     treeController.collapseAll();
@@ -306,6 +309,7 @@ class HomePage extends HookWidget {
                     const Icon(FluentIcons.arrow_maximize_vertical_20_regular),
               ),
               IconButton(
+                tooltip: 'Close tree',
                 onPressed: () =>
                     context.read<home.Bloc>().add(home.CloseTreeTab(tree)),
                 icon: const Icon(FluentIcons.dismiss_16_regular),
@@ -326,8 +330,13 @@ class HomePage extends HookWidget {
               final foregroundColor =
                   isMissing ? colorScheme.onError : colorScheme.onSurface;
 
+              final isDirectory =
+                  treeElement.type == home.TreeElementType.directory;
+
               return TextButton(
-                onPressed: () => treeController.toggleExpansion(treeElement),
+                onPressed: isDirectory
+                    ? () => treeController.toggleExpansion(treeElement)
+                    : null,
                 style: TextButton.styleFrom(
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.all(8),
@@ -346,12 +355,16 @@ class HomePage extends HookWidget {
                     padding: const EdgeInsets.all(2),
                     child: Row(
                       children: [
-                        Text(
-                          treeElement.childrenScanError == null
-                              ? treeElement.name
-                              : '${treeElement.name} [SCAN FAILED: ${treeElement.childrenScanError}]',
-                          style: textTheme.labelLarge?.copyWith(
-                            color: foregroundColor,
+                        if (isDirectory) Icon(FluentIcons.folder_16_filled),
+                        Padding(
+                          padding: EdgeInsetsDirectional.only(start: 4),
+                          child: Text(
+                            treeElement.childrenScanError == null
+                                ? treeElement.name
+                                : '${treeElement.name} [SCAN FAILED: ${treeElement.childrenScanError}]',
+                            style: textTheme.labelLarge?.copyWith(
+                              color: foregroundColor,
+                            ),
                           ),
                         ),
                       ],
