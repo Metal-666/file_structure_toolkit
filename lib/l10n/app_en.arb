@@ -1,0 +1,45 @@
+{
+	"@@locale": "en",
+	"menuBar_scanButton": "Scan",
+	"menuBar_importButton": "Import",
+	"menuBar_languageDropdown_title": "Language:",
+	"menuBar_themeDropdown_title": "Theme:",
+	"menuBar_themeDropdown_tooltip": "Change theme",
+	"dialog_scan_title": "Pick Directory to Scan:",
+	"dialog_import_title": "Pick File to Import:",
+	"dialog_export_title": "Export Scan Results:",
+	"dialog_failedFiles_title": "Some files failed to load:",
+	"dialog_failedFiles_okButton": "OK",
+	"treePanel_header_missingElementsLabel": "{missingElementsCount, plural, =0{No missing elements!} other{Missing elements: {missingElementsCount}}}",
+	"@treePanel_header_missingElementsLabel": {
+		"placeholders": {
+			"missingElementsCount": {
+				"type": "int"
+			}
+		}
+	},
+	"treePanel_header_exportButton_tooltip": "Export tree to file",
+	"treePanel_header_collapseButton_tooltip": "Collapse/Expand",
+	"treePanel_header_closeButton_tooltip": "Close tree",
+	"treePanel_tree_element_scanFailedLabel": "{elementName} [SCAN FAILED: {scanError}]",
+	"@treePanel_tree_element_scanFailedLabel": {
+		"placeholders": {
+			"elementName": {
+				"type": "String"
+			},
+			"scanError": {
+				"type": "String"
+			}
+		}
+	},
+	"overlay_drop_centerLabel": "<Drop file here>",
+	"overlay_scan_centerLabel": "Scanning directory: {directoryName}",
+	"@overlay_scan_centerLabel": {
+		"placeholders": {
+			"directoryName": {
+				"type": "String"
+			}
+		}
+	},
+	"overlay_scan_cancelButton": "Cancel"
+}

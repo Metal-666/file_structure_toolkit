@@ -1,0 +1,21 @@
+{
+	"@@locale": "uk",
+	"menuBar_scanButton": "Сканувати",
+	"menuBar_importButton": "Імпортувати",
+	"menuBar_languageDropdown_title": "Мова:",
+	"menuBar_themeDropdown_title": "Тема:",
+	"menuBar_themeDropdown_tooltip": "Змінити тему",
+	"dialog_scan_title": "Оберіть Директорію для Сканування:",
+	"dialog_import_title": "Оберіть Файл для Імпорту:",
+	"dialog_export_title": "Експорт Результату Сканування:",
+	"dialog_failedFiles_title": "Не вдалося імпортувати деякі файли:",
+	"dialog_failedFiles_okButton": "ОК",
+	"treePanel_header_missingElementsLabel": "{missingElementsCount, plural, =0{Всі елементи співпадають!} other{Знайдено розбіжностей: {missingElementsCount}}}",
+	"treePanel_header_exportButton_tooltip": "Експортувати дерево до файлу",
+	"treePanel_header_collapseButton_tooltip": "Згорнути/Розгорнути",
+	"treePanel_header_closeButton_tooltip": "Закрити",
+	"treePanel_tree_element_scanFailedLabel": "{elementName} [НЕМОЖЛИВО СКАНУВАТИ: {scanError}]",
+	"overlay_drop_centerLabel": "<Перетягніть файл сюди>",
+	"overlay_scan_centerLabel": "Сканується директорія: {directoryName}",
+	"overlay_scan_cancelButton": "Відмінити"
+}

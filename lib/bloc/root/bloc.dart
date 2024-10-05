@@ -9,6 +9,7 @@ class Bloc extends flutter_bloc.Bloc<Event, State> {
         state.copyWith(
           themeFlavorName: () =>
               Settings.themeFlavorName.value ?? themeFlavorMap.keys.first,
+          languageLocale: () => Settings.languageLocale.value,
         ),
       );
     });
@@ -21,6 +22,17 @@ class Bloc extends flutter_bloc.Bloc<Event, State> {
         await Settings.themeFlavorName.save(event.flavorName);
 
         emit(state.copyWith(themeFlavorName: () => event.flavorName));
+      },
+    );
+    on<ChangeLocale>(
+      (final event, final emit) async {
+        if (event.languageLocale == state.languageLocale) {
+          return;
+        }
+
+        await Settings.languageLocale.save(event.languageLocale);
+
+        emit(state.copyWith(languageLocale: () => event.languageLocale));
       },
     );
   }

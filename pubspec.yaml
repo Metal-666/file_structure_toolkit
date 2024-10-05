@@ -20,6 +20,9 @@ dependencies:
   flutter_bloc: ^8.1.6
   flutter_fancy_tree_view: ^1.6.0
   flutter_hooks: ^0.20.5
+  flutter_localizations:
+    sdk: flutter
+  intl: any
   json: ^0.20.2
   path: ^1.9.0
   shared_preferences: ^2.2.3
@@ -31,3 +34,4 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true

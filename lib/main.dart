@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:catppuccin_flutter/catppuccin_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '/bloc/root/root.dart' as root;
 import '/pages/home.dart';
@@ -18,7 +19,8 @@ class MainApp extends StatelessWidget {
         create: (final context) => root.Bloc()..add(const root.Startup()),
         child: BlocBuilder<root.Bloc, root.State>(
           buildWhen: (final previous, final current) =>
-              previous.themeFlavorName != current.themeFlavorName,
+              previous.themeFlavorName != current.themeFlavorName ||
+              previous.languageLocale != current.languageLocale,
           builder: (final context, final state) {
             final themeFlavor = root.themeFlavorMap[state.themeFlavorName] ??
                 root.themeFlavorMap.values.first;
@@ -46,6 +48,9 @@ class MainApp extends StatelessWidget {
             );
 
             return MaterialApp(
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              supportedLocales: AppLocalizations.supportedLocales,
+              locale: Locale(state.languageLocale),
               theme: themeData.copyWith(
                 canvasColor: flavor.crust,
                 scaffoldBackgroundColor: flavor.base,

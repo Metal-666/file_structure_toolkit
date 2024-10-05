@@ -13,3 +13,9 @@ class ChangeTheme extends Event {
 
   const ChangeTheme(this.flavorName);
 }
+
+class ChangeLocale extends Event {
+  final String languageLocale;
+
+  const ChangeLocale(this.languageLocale);
+}

@@ -10,4 +10,5 @@ import '../../settings.dart';
 part 'bloc.dart';
 part 'events.dart';
 part 'flavors.dart';
+part 'locales.dart';
 part 'state.dart';

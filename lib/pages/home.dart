@@ -9,6 +9,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' as flutter_bloc;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_fancy_tree_view/flutter_fancy_tree_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '/bloc/root/home/home.dart' as home;
@@ -102,7 +103,8 @@ class HomePage extends HookWidget {
                   TextButton.icon(
                     onPressed: () {
                       final directoryPicker = DirectoryPicker()
-                        ..title = 'Pick Directory to Scan:';
+                        ..title =
+                            AppLocalizations.of(context)!.dialog_scan_title;
 
                       final directory = directoryPicker.getDirectory();
 
@@ -115,12 +117,15 @@ class HomePage extends HookWidget {
                           .add(home.ChoseDirectoryToScan(directory));
                     },
                     icon: const Icon(FluentIcons.search_16_regular),
-                    label: const Text('Scan'),
+                    label: Text(
+                      AppLocalizations.of(context)!.menuBar_scanButton,
+                    ),
                   ),
                   TextButton.icon(
                     onPressed: () {
                       final filePicker = OpenFilePicker()
-                        ..title = 'Pick File to Import:'
+                        ..title =
+                            AppLocalizations.of(context)!.dialog_import_title
                         ..fileMustExist = true
                         ..filterSpecification = treeFileFilterSpecification;
 
@@ -133,9 +138,74 @@ class HomePage extends HookWidget {
                       context.read<home.Bloc>().add(home.ImportTrees(files));
                     },
                     icon: const Icon(FluentIcons.arrow_import_16_regular),
-                    label: const Text('Import'),
+                    label: Text(
+                      AppLocalizations.of(context)!.menuBar_importButton,
+                    ),
                   ),
                   const Spacer(),
+                  BlocBuilder<root.Bloc, root.State>(
+                    buildWhen: (final previous, final current) =>
+                        previous.languageLocale != current.languageLocale,
+                    builder: (final context, final state) => MenuAnchor(
+                      menuChildren: [
+                        Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: Text(
+                            AppLocalizations.of(context)!
+                                .menuBar_languageDropdown_title,
+                            style: theme.textTheme.titleMedium,
+                          ),
+                        ),
+                        const Divider(height: 0),
+                        ...root.languageLocalesMap.keys.map(
+                          (final locale) => MenuItemButton(
+                            style: MenuItemButton.styleFrom(
+                              padding: const EdgeInsets.all(4),
+                              minimumSize: Size.zero,
+                            ),
+                            onPressed: () => context
+                                .read<root.Bloc>()
+                                .add(root.ChangeLocale(locale)),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 4,
+                                    horizontal: 10,
+                                  ),
+                                  child: Text(
+                                    root.languageLocalesMap[locale] ?? '',
+                                    style: theme.textTheme.titleMedium,
+                                  ),
+                                ),
+                                if (locale == state.languageLocale)
+                                  Icon(
+                                    FluentIcons.checkmark_16_regular,
+                                    color: theme.colorScheme.primary,
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                      builder: (
+                        final context,
+                        final controller,
+                        final child,
+                      ) =>
+                          Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: TextButton(
+                          onPressed: () => controller.isOpen
+                              ? controller.close()
+                              : controller.open(),
+                          child: Text(
+                            root.languageLocalesMap[state.languageLocale] ?? '',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   BlocBuilder<root.Bloc, root.State>(
                     buildWhen: (final previous, final current) =>
                         previous.themeFlavorName != current.themeFlavorName,
@@ -144,7 +214,8 @@ class HomePage extends HookWidget {
                         Padding(
                           padding: const EdgeInsets.all(4),
                           child: Text(
-                            'Theme:',
+                            AppLocalizations.of(context)!
+                                .menuBar_themeDropdown_title,
                             style: theme.textTheme.titleMedium,
                           ),
                         ),
@@ -186,7 +257,8 @@ class HomePage extends HookWidget {
                         final child,
                       ) =>
                           IconButton(
-                        tooltip: 'Change theme',
+                        tooltip: AppLocalizations.of(context)!
+                            .menuBar_themeDropdown_tooltip,
                         padding: const EdgeInsets.all(4),
                         onPressed: () => controller.isOpen
                             ? controller.close()
@@ -252,10 +324,9 @@ class HomePage extends HookWidget {
       defaultExpansionState: true,
     );
 
-    final missingElements = treeElements.count(
+    final missingElementsCount = treeElements.count(
       (final treeElement) => !treeElement.containingTrees.contains(tree),
     );
-    final isMissingElements = missingElements > 0;
 
     return Column(
       children: [
@@ -267,21 +338,23 @@ class HomePage extends HookWidget {
                 child: Text(tree.path),
               ),
               Text(
-                isMissingElements
-                    ? 'Missing elements: $missingElements'
-                    : 'No missing elements!',
+                AppLocalizations.of(context)!
+                    .treePanel_header_missingElementsLabel(
+                  missingElementsCount,
+                ),
                 style: textTheme.bodyMedium?.copyWith(
-                  color: isMissingElements
+                  color: missingElementsCount > 0
                       ? colorScheme.error
                       : colorScheme.secondary,
                 ),
               ),
               const Spacer(),
               IconButton(
-                tooltip: 'Export tree to file',
+                tooltip: AppLocalizations.of(context)!
+                    .treePanel_header_exportButton_tooltip,
                 onPressed: () {
                   final saveFilePicker = SaveFilePicker()
-                    ..title = 'Export scan results:'
+                    ..title = AppLocalizations.of(context)!.dialog_export_title
                     ..filterSpecification = treeFileFilterSpecification
                     ..fileName = 'tree'
                     ..defaultExtension = '.json';
@@ -297,7 +370,8 @@ class HomePage extends HookWidget {
                 icon: const Icon(FluentIcons.arrow_export_16_regular),
               ),
               IconButton(
-                tooltip: 'Collapse/Expand',
+                tooltip: AppLocalizations.of(context)!
+                    .treePanel_header_collapseButton_tooltip,
                 onPressed: () {
                   if (treeController.isTreeExpanded) {
                     treeController.collapseAll();
@@ -309,7 +383,8 @@ class HomePage extends HookWidget {
                     const Icon(FluentIcons.arrow_maximize_vertical_20_regular),
               ),
               IconButton(
-                tooltip: 'Close tree',
+                tooltip: AppLocalizations.of(context)!
+                    .treePanel_header_closeButton_tooltip,
                 onPressed: () =>
                     context.read<home.Bloc>().add(home.CloseTreeTab(tree)),
                 icon: const Icon(FluentIcons.dismiss_16_regular),
@@ -332,6 +407,8 @@ class HomePage extends HookWidget {
 
               final isDirectory =
                   treeElement.type == home.TreeElementType.directory;
+
+              final childrenScanError = treeElement.childrenScanError;
 
               return TextButton(
                 onPressed: isDirectory
@@ -359,9 +436,13 @@ class HomePage extends HookWidget {
                         Padding(
                           padding: EdgeInsetsDirectional.only(start: 4),
                           child: Text(
-                            treeElement.childrenScanError == null
+                            childrenScanError == null
                                 ? treeElement.name
-                                : '${treeElement.name} [SCAN FAILED: ${treeElement.childrenScanError}]',
+                                : AppLocalizations.of(context)!
+                                    .treePanel_tree_element_scanFailedLabel(
+                                    treeElement.name,
+                                    childrenScanError,
+                                  ),
                             style: textTheme.labelLarge?.copyWith(
                               color: foregroundColor,
                             ),
@@ -393,7 +474,7 @@ class HomePage extends HookWidget {
                 color: theme.colorScheme.primary.withValues(alpha: 0.4),
                 child: Center(
                   child: Text(
-                    '<Drop file here>',
+                    AppLocalizations.of(context)!.overlay_drop_centerLabel,
                     style: theme.textTheme.headlineSmall
                         ?.copyWith(color: theme.colorScheme.onSurface),
                   ),
@@ -409,7 +490,8 @@ class HomePage extends HookWidget {
             previous.currentlyScanningDirectory !=
             current.currentlyScanningDirectory,
         builder: (final context, final state) {
-          final visible = state.currentlyScanningDirectory != null;
+          final currentlyScanningDirectory = state.currentlyScanningDirectory;
+          final visible = currentlyScanningDirectory != null;
 
           return IgnorePointer(
             ignoring: !visible,
@@ -432,13 +514,13 @@ class HomePage extends HookWidget {
                                 padding: EdgeInsets.all(12),
                                 child: CircularProgressIndicator(),
                               ),
-                              BlocBuilder<home.Bloc, home.State>(
-                                buildWhen: (final previous, final current) =>
-                                    current.currentlyScanningDirectory != null,
-                                builder: (final context, final state) => Text(
-                                  'Scanning directory: ${state.currentlyScanningDirectory}',
+                              if (visible)
+                                Text(
+                                  AppLocalizations.of(context)!
+                                      .overlay_scan_centerLabel(
+                                    currentlyScanningDirectory,
+                                  ),
                                 ),
-                              ),
                             ],
                           ),
                           TextButton.icon(
@@ -446,7 +528,10 @@ class HomePage extends HookWidget {
                                 .read<home.Bloc>()
                                 .add(home.CancelDirectoryScan()),
                             icon: const Icon(FluentIcons.dismiss_16_regular),
-                            label: const Text('Cancel'),
+                            label: Text(
+                              AppLocalizations.of(context)!
+                                  .overlay_scan_cancelButton,
+                            ),
                           ),
                         ],
                       ),
@@ -464,7 +549,7 @@ class HomePage extends HookWidget {
     final IMap<String, String> failedFiles,
   ) =>
       AlertDialog(
-        title: const Text('Failed to load files:'),
+        title: Text(AppLocalizations.of(context)!.dialog_failedFiles_title),
         content: Column(
           children: failedFiles.entries
               .map((final failedFile) => Text(failedFile.key))
@@ -473,7 +558,8 @@ class HomePage extends HookWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Ok'),
+            child:
+                Text(AppLocalizations.of(context)!.dialog_failedFiles_okButton),
           ),
         ],
       );

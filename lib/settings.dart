@@ -16,7 +16,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 enum Settings<T extends Object?> {
   // Only use types, supported by Shared Preferences (both nullable and non-nullable are fine).
   // If the type is not nullable, provide a default value.
-  themeFlavorName<String?>(key: 'themeFlavorName');
+  themeFlavorName<String?>(key: 'themeFlavorName'),
+  languageLocale<String>(key: 'languageLocale', defaultValue: 'en');
 
   static late SharedPreferences _sharedPreferences;
 
