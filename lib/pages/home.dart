@@ -14,7 +14,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import '/bloc/root/home/home.dart' as home;
 import '/bloc/root/root.dart' as root;
 
-const treeFilefilterSpecification = {'JSON file': '*.json'};
+const treeFileFilterSpecification = {'JSON file': '*.json'};
 
 class HomePage extends HookWidget {
   const HomePage({super.key});
@@ -122,7 +122,7 @@ class HomePage extends HookWidget {
                       final filePicker = OpenFilePicker()
                         ..title = 'Pick File to Import:'
                         ..fileMustExist = true
-                        ..filterSpecification = treeFilefilterSpecification;
+                        ..filterSpecification = treeFileFilterSpecification;
 
                       final files = filePicker.getFiles();
 
@@ -280,7 +280,7 @@ class HomePage extends HookWidget {
                 onPressed: () {
                   final saveFilePicker = SaveFilePicker()
                     ..title = 'Export scan results:'
-                    ..filterSpecification = treeFilefilterSpecification
+                    ..filterSpecification = treeFileFilterSpecification
                     ..fileName = 'tree'
                     ..defaultExtension = '.json';
 
@@ -377,7 +377,7 @@ class HomePage extends HookWidget {
               opacity: state.isDraggingOver ? 1 : 0,
               duration: const Duration(milliseconds: 200),
               child: Container(
-                color: theme.colorScheme.primary.withOpacity(0.4),
+                color: theme.colorScheme.primary.withValues(alpha: 0.4),
                 child: Center(
                   child: Text(
                     '<Drop file here>',
@@ -404,7 +404,7 @@ class HomePage extends HookWidget {
               opacity: visible ? 1 : 0,
               duration: const Duration(milliseconds: 200),
               child: Container(
-                color: Colors.black.withOpacity(0.4),
+                color: Colors.black.withValues(alpha: 0.4),
                 child: Center(
                   child: Card(
                     child: Padding(

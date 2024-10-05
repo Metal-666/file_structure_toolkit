@@ -28,7 +28,7 @@ enum Settings<T extends Object?> {
     this.defaultValue,
   });
 
-  /// Retrives the value of this setting.
+  /// Retrieves the value of this setting.
   ///
   /// If the setting is not nullable and was not assigned a value, returns [defaultValue].
   /// If [defaultValue] is also null, throws [NoDefaultValueException].
@@ -48,7 +48,7 @@ enum Settings<T extends Object?> {
     return value as T;
   }
 
-  /// Retrives the value of this setting or [defaultValue] if it is null (even if the setting is nullable).
+  /// Retrieves the value of this setting or [defaultValue] if it is null (even if the setting is nullable).
   T? get valueOrDefault => value ?? defaultValue;
 
   /// Writes provided [value] to this setting.
@@ -90,7 +90,7 @@ enum Settings<T extends Object?> {
       /*
       await _sharedPreferences.setString(key, jsonEncode(value));
       */
-      // But then there also needs to be a way to retieve the value (calling the value getter will most likely throw an exception)...
+      // But then there also needs to be a way to retrieve the value (calling the value getter will most likely throw an exception)...
 
       throw UnsupportedSettingTypeException(key);
     }
@@ -100,12 +100,12 @@ enum Settings<T extends Object?> {
   static Future<void> init() async {
     _sharedPreferences = await SharedPreferences.getInstance();
 
-    // ↓ Uncommment to clear all settings ↓
+    // ↓ Uncomment to clear all settings ↓
     /*
     await reset();
     */
 
-    // ↓ Uncommment to clear all settings except setting1 ↓
+    // ↓ Uncomment to clear all settings except setting1 ↓
     /*
     await reset([setting1]);
     */
@@ -146,7 +146,7 @@ class NoDefaultValueException extends SettingException {
 
   @override
   String get message =>
-      'Attempted to get a non-nullable setting "$_settingName" wich was not assigned and doesn\'t have a default value.';
+      'Attempted to get a non-nullable setting "$_settingName" which was not assigned and doesn\'t have a default value.';
 }
 
 class UnsupportedSettingTypeException extends SettingException {
