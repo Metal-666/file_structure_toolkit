@@ -15,3 +15,9 @@ My personal utility for scanning, exporting to file and comparing file structure
   - 4 [Catppuccin](https://github.com/catppuccin/catppuccin) themes are included.
 
 ## Showcase
+
+<details>
+  <summary>Showcase</summary>
+  
+  https://github.com/user-attachments/assets/33436ab8-baa2-44c7-855c-9001fb6b4680
+</details>
