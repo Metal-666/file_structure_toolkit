@@ -11,11 +11,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_fancy_tree_view/flutter_fancy_tree_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:path/path.dart';
 
 import '/bloc/root/home/home.dart' as home;
 import '/bloc/root/root.dart' as root;
 
-const treeFileFilterSpecification = {'JSON file': '*.json'};
+const treeFileFilterSpecification = {'TREE file': '*.tree'};
 
 class HomePage extends HookWidget {
   const HomePage({super.key});
@@ -264,7 +265,7 @@ class HomePage extends HookWidget {
                             ? controller.close()
                             : controller.open(),
                         icon: Image.network(
-                          'https://github.com/catppuccin/catppuccin/blob/main/assets/logos/exports/1544x1544_circle.png?raw=true',
+                          'https://github.com/catppuccin/catppuccin/blob/main/assets/logos/exports/${theme.brightness == Brightness.dark ? '1544x1544_circle' : 'latte_circle'}.png?raw=true',
                           height: 35,
                         ),
                       ),
@@ -287,19 +288,31 @@ class HomePage extends HookWidget {
       BlocBuilder<home.Bloc, home.State>(
         buildWhen: (final previous, final current) =>
             previous.trees != current.trees,
-        builder: (final context, final state) => Row(
-          children: state.trees
-              .map(
-                (final tree) => Expanded(
-                  child: treePanelBuilder(
-                    context,
-                    tree,
-                    state.treeElements,
+        builder: (final context, final state) {
+          final theme = Theme.of(context);
+
+          return state.trees.isEmpty
+              ? Center(
+                  child: Text(
+                    AppLocalizations.of(context)!.treesPanel_emptyMessage,
+                    style: theme.textTheme.headlineSmall
+                        ?.copyWith(color: theme.colorScheme.onSecondary),
                   ),
-                ),
-              )
-              .toList(),
-        ),
+                )
+              : Row(
+                  children: state.trees
+                      .map(
+                        (final tree) => Expanded(
+                          child: treePanelBuilder(
+                            context,
+                            tree,
+                            state.treeElements,
+                          ),
+                        ),
+                      )
+                      .toList(),
+                );
+        },
       );
 
   Widget _treePanelBuilder(
@@ -329,26 +342,18 @@ class HomePage extends HookWidget {
     );
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Card(
           child: Row(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text(tree.path),
-              ),
-              Text(
-                AppLocalizations.of(context)!
-                    .treePanel_header_missingElementsLabel(
-                  missingElementsCount,
-                ),
-                style: textTheme.bodyMedium?.copyWith(
-                  color: missingElementsCount > 0
-                      ? colorScheme.error
-                      : colorScheme.secondary,
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(8),
+                  scrollDirection: Axis.horizontal,
+                  child: Text(tree.path),
                 ),
               ),
-              const Spacer(),
               IconButton(
                 tooltip: AppLocalizations.of(context)!
                     .treePanel_header_exportButton_tooltip,
@@ -356,8 +361,8 @@ class HomePage extends HookWidget {
                   final saveFilePicker = SaveFilePicker()
                     ..title = AppLocalizations.of(context)!.dialog_export_title
                     ..filterSpecification = treeFileFilterSpecification
-                    ..fileName = 'tree'
-                    ..defaultExtension = '.json';
+                    ..fileName = '${basename(tree.path)}.tree'
+                    ..defaultExtension = '.tree';
 
                   final file = saveFilePicker.getFile();
 
@@ -368,6 +373,8 @@ class HomePage extends HookWidget {
                   context.read<home.Bloc>().add(home.ExportScan(file, tree));
                 },
                 icon: const Icon(FluentIcons.arrow_export_16_regular),
+                iconSize: 18,
+                visualDensity: VisualDensity.compact,
               ),
               IconButton(
                 tooltip: AppLocalizations.of(context)!
@@ -381,6 +388,8 @@ class HomePage extends HookWidget {
                 },
                 icon:
                     const Icon(FluentIcons.arrow_maximize_vertical_20_regular),
+                iconSize: 18,
+                visualDensity: VisualDensity.compact,
               ),
               IconButton(
                 tooltip: AppLocalizations.of(context)!
@@ -388,6 +397,8 @@ class HomePage extends HookWidget {
                 onPressed: () =>
                     context.read<home.Bloc>().add(home.CloseTreeTab(tree)),
                 icon: const Icon(FluentIcons.dismiss_16_regular),
+                iconSize: 18,
+                visualDensity: VisualDensity.compact,
               ),
             ],
           ),
@@ -432,7 +443,11 @@ class HomePage extends HookWidget {
                     padding: const EdgeInsets.all(2),
                     child: Row(
                       children: [
-                        if (isDirectory) Icon(FluentIcons.folder_16_filled),
+                        if (isDirectory)
+                          Icon(
+                            FluentIcons.folder_16_filled,
+                            color: isMissing ? foregroundColor : null,
+                          ),
                         Padding(
                           padding: EdgeInsetsDirectional.only(start: 4),
                           child: Text(
@@ -454,6 +469,23 @@ class HomePage extends HookWidget {
                 ),
               );
             },
+          ),
+        ),
+        Card(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(8),
+            scrollDirection: Axis.horizontal,
+            child: Text(
+              AppLocalizations.of(context)!
+                  .treePanel_header_missingElementsLabel(
+                missingElementsCount,
+              ),
+              style: textTheme.bodyMedium?.copyWith(
+                color: missingElementsCount > 0
+                    ? colorScheme.error
+                    : colorScheme.secondary,
+              ),
+            ),
           ),
         ),
       ],

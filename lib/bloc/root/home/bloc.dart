@@ -280,8 +280,8 @@ class Bloc extends flutter_bloc.Bloc<Event, State> {
 
     for (final file in files) {
       try {
-        if (!lib_path.extension(file.path).endsWith('.json')) {
-          throw Exception('File is not a JSON document!');
+        if (!lib_path.extension(file.path).endsWith('.tree')) {
+          throw Exception('File is not a .tree document!');
         }
 
         final fileContent = await file.readAsString();

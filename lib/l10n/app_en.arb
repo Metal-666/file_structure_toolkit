@@ -10,6 +10,7 @@
 	"dialog_export_title": "Export Scan Results:",
 	"dialog_failedFiles_title": "Some files failed to load:",
 	"dialog_failedFiles_okButton": "OK",
+	"treesPanel_emptyMessage": "Use the buttons at the top or drag a .tree file here...",
 	"treePanel_header_missingElementsLabel": "{missingElementsCount, plural, =0{No missing elements!} other{Missing elements: {missingElementsCount}}}",
 	"@treePanel_header_missingElementsLabel": {
 		"placeholders": {

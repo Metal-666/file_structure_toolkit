@@ -37,13 +37,13 @@ class MainApp extends StatelessWidget {
                 primary: flavor.mauve,
                 onPrimary: flavor.base,
                 secondary: flavor.teal,
-                onSecondary: isDark ? flavor.lavender : flavor.base,
+                onSecondary: isDark ? flavor.lavender : flavor.text,
                 tertiary: flavor.flamingo,
                 onTertiary: flavor.base,
                 surface: flavor.mantle,
                 onSurface: flavor.text,
                 error: flavor.red,
-                onError: isDark ? flavor.base : flavor.text,
+                onError: flavor.base,
               ),
             );
 

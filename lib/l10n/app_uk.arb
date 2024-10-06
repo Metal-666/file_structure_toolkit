@@ -10,6 +10,7 @@
 	"dialog_export_title": "Експорт Результату Сканування:",
 	"dialog_failedFiles_title": "Не вдалося імпортувати деякі файли:",
 	"dialog_failedFiles_okButton": "ОК",
+	"treesPanel_emptyMessage": "Використайте кнопки зверху або перетягніть сюди файл .tree...",
 	"treePanel_header_missingElementsLabel": "{missingElementsCount, plural, =0{Всі елементи співпадають!} other{Знайдено розбіжностей: {missingElementsCount}}}",
 	"treePanel_header_exportButton_tooltip": "Експортувати дерево до файлу",
 	"treePanel_header_collapseButton_tooltip": "Згорнути/Розгорнути",
